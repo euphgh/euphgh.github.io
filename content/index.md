@@ -1,7 +1,3 @@
----
-share: "false"
----
-
 # Hi there 👋
 Undergraduate, focus on CPU and Agile hardware development
 

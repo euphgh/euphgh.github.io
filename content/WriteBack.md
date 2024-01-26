@@ -1,6 +1,6 @@
-- [[WritebackSourceParams|WritebackSourceParams]]
-- [[HasWritebackSource|HasWritebackSource]]
-- [[HasWritebackSink|HasWritebackSink]]
+- [[./WritebackSourceParams|WritebackSourceParams]]
+- [[./HasWritebackSource|HasWritebackSource]]
+- [[./HasWritebackSink|HasWritebackSink]]
 ```scala
 WbArbiterWrapper: HasWritebackSource = Seq[WritebackSourceParams, 1](
     WritebackSourceParams: Seq[Seq[ExuConfig, 11]](
