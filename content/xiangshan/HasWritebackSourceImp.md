@@ -1,0 +1,6 @@
+- 仅用于extends`LazyModuleImp`的`trait`
+- 仅定义函数接口，未定义实现
+	- `def writebackSource: Option[Seq[Seq[Valid[ExuOutput]]]]`
+	- `def writebackSource1: Option[Seq[Seq[DecoupledIO[ExuOutput]]]]`
+- 第一个`Seq`：宽度 = **2**，对应于`Int`和`Float`两个`ExuBlock`
+- 第二个`Seq`：每个`ExuBlock`中存在的多个`ExeUnit`的写回端口[[ExuOutput|ExuOutput]]
