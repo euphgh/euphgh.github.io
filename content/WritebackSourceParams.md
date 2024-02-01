@@ -1,3 +1,0 @@
-- 成员变量：`var exuConfigs: Seq[Seq[ExuConfig]] = Seq()`
-- 可以认为是`type = Seq[Seq[ExcConfig]]`
-	- 具有`length`、`++`两个`Seq`的原始函数，功能相同
