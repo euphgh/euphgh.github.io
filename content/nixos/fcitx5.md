@@ -1,0 +1,11 @@
+- 一般操作系统中 fcitx5 配置文件在`~/.config/fcitx5`，由三部分组成
+  - `profile`：存在哪几种英文以外的输入法
+  - `config`：输入法切换热键、行为
+  - conf 文件夹`：各个输入法，addons 的行为等
+- nixos 存在于`i18n.inputMethod.fcitx5.settings`下
+  - `inputMethod`：对应于`profile`
+  - `globalOption`：对应于`config`
+  - `addons`：对应于 conf 文件夹
+  - 所有的类型都是[[Attribute Set]]，会被直接放入[toINI](https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix)函数
+  - `globalSection`表示不属于任何域的全局设定
+  - 尽量使用字符串而不是 nix 语言的`false`和`true`，大小写不同
