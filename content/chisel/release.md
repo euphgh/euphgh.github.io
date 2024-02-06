@@ -1,0 +1,7 @@
+- 只能使用sbt，目前chisel不支持mill发布
+	- 编写的`build.sc`的发布版本错误
+	- 会导致奇怪的依赖
+- 使用命令`sbt $(SBT_FLAGS) publishLocal`发布单个Scala版本
+- mill在使用时会在两个地方找库，找不到会下到远程
+	- 本地：`~/.ivy2/local`
+	- 远程：`~/.cache/coursier`
