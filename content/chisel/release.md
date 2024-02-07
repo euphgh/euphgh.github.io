@@ -1,7 +1,11 @@
-- 只能使用sbt，目前chisel不支持mill发布
-	- 编写的`build.sc`的发布版本错误
-	- 会导致奇怪的依赖
-- 使用命令`sbt $(SBT_FLAGS) publishLocal`发布单个Scala版本
-- mill在使用时会在两个地方找库，找不到会下到远程
-	- 本地：`~/.ivy2/local`
-	- 远程：`~/.cache/coursier`
+- 只能使用 sbt，目前 chisel 不支持 mill 发布
+  - 编写的`build.sc`的发布版本错误
+  - 会导致奇怪的依赖
+- 使用命令`sbt $(SBT_FLAGS) publishLocal`发布单个 Scala 版本
+  - `sbt <projectname>/<cmdname>` 可以执行特定任务的发布
+  - `sbt unipublish/publishLocal` 用于执行 chisel6 的发布
+    - 否则会导致只发布 chisel-plugin，chisel 本体不发布
+- sbt 的 release 版本来自于[[git-tag|git-tag]]，所以不可以使用 github download zip 发布
+- mill 在使用时会在两个地方找库，找不到会下到远程
+  - 本地：`~/.ivy2/local`
+  - 远程：`~/.cache/coursier`
