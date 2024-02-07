@@ -6,6 +6,6 @@
   - `inputMethod`：对应于`profile`
   - `globalOption`：对应于`config`
   - `addons`：对应于 conf 文件夹
-  - 所有的类型都是[[Attribute Set]]，会被直接放入[toINI](https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix)函数
+  - 所有的类型都是[Attribute Set](https://nixos.org/manual/nix/stable/language/values.html?highlight=attribute%20set#attribute-set)，会被直接放入[toINI](https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix)函数
   - `globalSection`表示不属于任何域的全局设定
   - 尽量使用字符串而不是 nix 语言的`false`和`true`，大小写不同
