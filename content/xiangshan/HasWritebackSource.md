@@ -9,9 +9,9 @@ val writebackSourceParams: Seq[WritebackSourceParams]
 
 ```scala
 final def writebackSource(sourceMod: HasWritebackSourceImp):
-	Seq[Seq[Valid[ExuOutput]]]`
+	Seq[Seq[Valid[ExuOutput]]]
 final def writebackSource1(sourceMod: HasWritebackSourceImp):
-	Seq[Seq[DecoupledIO[ExuOutput]]]`
+	Seq[Seq[DecoupledIO[ExuOutput]]]
 ```
 
 - 对参数`sourceMod`进行**存在性**和**宽度检查**
@@ -25,5 +25,5 @@ final def writebackSource1(sourceMod: HasWritebackSourceImp):
 ## 用法
 
 - 仅用于[[./LazyModule|LazyModule]]的 extends，需记录其`module`变量
-  - [[LazyModuleImp|LazyModuleImp]]需要 extends [[./HasWritebackSourceImp|HasWritebackSourceImp]]
+  - [[LazyModuleImp|LazyModuleImp]] 需要 extends [[./HasWritebackSourceImp|HasWritebackSourceImp]]
   - `writebackSource`变量就是该`LazyModule`的`module`的引用
