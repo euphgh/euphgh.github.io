@@ -81,7 +81,7 @@ when(mem_addr_update){
   - s\_\*：启动寄存器，表示下一拍需要开始的工作，false 有效
   - w\_\*：等待寄存器，表示等待的工作已经完成，false 有效
 - T0：`req.fire`第一拍保存请求信息到寄存器，拉起 s_pmp_check(标志下一拍开始 pmp 检查的启动寄存器)
-- T1：检查 pmp，参照 [[ptw#Access Fault|ptw > Access Fault]]，同时拉起 s_mem_req(标志下一拍发起 mem 请求的启动寄存器)
+- T1：检查 pmp，参照 [[PageTableWalker#Access Fault|PageTableWalker > Access Fault]]，同时拉起 s_mem_req(标志下一拍发起 mem 请求的启动寄存器)
 - mem req state：等待`mem.req.fire`
   - 清除 s_mem_req，表示不需要拉起 mem.req.valid
   - 拉起 w_mem_resp，表示需要下一拍开始等待 mem.resp.valid

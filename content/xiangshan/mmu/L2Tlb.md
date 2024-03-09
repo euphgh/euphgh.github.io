@@ -17,7 +17,7 @@ BlockHelper 没有使用，只设置了 Inputs，没有使用 outputs
 ## Cache Req
 
 `arb1.in`总裁两个`io.tlb`。
-[[./ptw|ptw]]的`io.llptw`、MissQueue、`arb1.out`和 Prefecher 一共 4 个输入源按照优先级由`arb2`总裁，输入到 CacheIO
+[[./PageTableWalker|PageTableWalker]]的`io.llptw`、MissQueue、`arb1.out`和 Prefecher 一共 4 个输入源按照优先级由`arb2`总裁，输入到 CacheIO
 
 ```scala
 // arb2 input port

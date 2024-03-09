@@ -138,3 +138,12 @@ when (io.cache.fire) {
 io.cache.valid := Cat(is_cache).orR
 io.cache.bits := ParallelMux(is_cache, entries.map(_.req_info))
 ```
+
+# H Extentison
+新增state，在`addr_check`之前先进行叶pte.ppn的第二级地址转换，
+也就是Guest页pte基地址的第二级转换，对应`htpw_req`和`hptw_resp`。
+此外，在得到叶pte后，也需要对其ppn进行第二级地址转换，对应`last_hptw_req`和`last_hptw_resp`。
+```scala
+val state_idle :: state_hptw_req :: state_hptw_resp :: state_addr_check :: state_mem_req :: state_mem_waiting :: state_mem_out :: state_last_hptw_req :: state_last_hptw_resp :: state_cache :: Nil = Enum(10)
+```
+

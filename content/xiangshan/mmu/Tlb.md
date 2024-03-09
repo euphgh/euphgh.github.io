@@ -1,4 +1,13 @@
-## GPA
+# Miss 与 Hit
+
+Miss 由以下两种条件相或得到，在第二种情况下，entry 没有记录 gpaddr，需要向[[./L2Tlb|L2Tlb]]发起正常的 Ptw.req 获取
+
+1. [[./TlbStorage|TlbStorage]]不存在 vpn 符合的 entry 存在
+2. entry 的 g_perm（guest 叶 pte 的 perm）检查有[[../../report/2024.3.3|2024.3.3]]
+
+但是 hit 仅仅是[[./TlbStorage|TlbStorage]]存在 entry 或者是[[./L2Tlb|L2Tlb]]正好返回对应 entry。简而言之，hit 置起时也可能 miss
+
+# GPA获取
 
 - 如下的寄存器专门用于获取 Guest Physical Address
 
@@ -18,7 +27,7 @@ val need_gpa_vpn_hit = RegEnable(
 - 状态机在`tlb.req.fire`的下一拍（非阻塞返回拍）启动
   - 需要一拍时间比对`tlb.req.vaddr`和保存的 gpa(`need_gpa_vpn_hit`)
 
-### GPA 状态机转换
+## GPA 状态机转换
 
 1. 默认状态均为`false`
 2. 满足如下条件时，设置状态`need_gpa,resp_gpa_refill = true,false`，同时保存本次 tlb 请求虚地址
