@@ -1,10 +1,10 @@
-## TlbSectorEntry
+# TlbSectorEntry
 
 ```scala
 val entries = Reg(Vec(nWays, new TlbSectorEntry(normalPage, superPage)))
 ```
 
-- 全相连映射，路数为nWays，默认2
+- 全相连映射，路数为 nWays，默认 2
 - `normalPage`和`superPage`均为 true，以下只讨论该情况
 
 ```scala
@@ -63,7 +63,7 @@ def genPPN(saveLevel: Boolean, valid: Bool)(vpn: UInt) : UInt = {
 - 使用`vpn`的最低 3 位直接索引`ppn_low`向量，拼到 ppn 的最低 3 位
 - level：判断当前存储的页表的级数，用于判断中间的段数的来源
 
-## HitVec
+# HitVec
 
 ```scala
 val hitVec = VecInit((entries.zipWithIndex).zip(v zip refill_mask.asBools).map{
@@ -83,7 +83,7 @@ val hitVec = VecInit((entries.zipWithIndex).zip(v zip refill_mask.asBools).map{
 - 根据`s2xlate`开启第二阶段地址翻译
 - 计算命中均在请求当周期完成，会将 HitVec**存一拍的 HitVecReg 送出**
 
-## write
+# write
 
 ```scala
 when (io.w.valid) {
@@ -91,25 +91,27 @@ when (io.w.valid) {
   entries(io.w.bits.wayIdx).apply(io.w.bits.data)
 }
 // write assert, should not duplicate with the existing entries
-val w_hit_vec = VecInit(entries.zip(v).map{case (e, vi) => 
-  e.wbhit(io.w.bits.data, 
-    Mux(io.w.bits.data.s2xlate =/= noS2xlate, 
-      io.csr.vsatp.asid, 
+val w_hit_vec = VecInit(entries.zip(v).map{case (e, vi) =>
+  e.wbhit(io.w.bits.data,
+    Mux(io.w.bits.data.s2xlate =/= noS2xlate,
+      io.csr.vsatp.asid,
       io.csr.satp.asid
-    ), 
+    ),
     s2xlate = io.w.bits.data.s2xlate
   ) && vi
 })
 XSError(io.w.valid && Cat(w_hit_vec).orR, s"${parentName} refill, duplicate with existing entries")
 ```
-- 写回替换时需要Assert没有写回已经存在的条目
-  - 在未加入H扩展时已经存k在
-  - 为什么需要`PopCount(wb_valididx) === 1.U`不太理解
+
+写回替换时需要 Assert 没有写回已经存在的条目，该部分在未加入 H 扩展时已经存在
+
+#question 不理解`PopCount(wb_valididx) === 1.U`。个人理解是`wb_valididx`和`this.valididx`完全相同，仅仅需要排除该情况，对于添加，改变等不需要XSError。但如果添加到另外一路也可能会导致多重命中
+
 ```scala
 def wbhit(data: PtwRespS2, asid: UInt, nSets: Int = 1, ignoreAsid: Boolean = false, s2xlate: UInt): Bool = {
     val s1vpn = data.s1.entry.tag
     val s2vpn = data.s2.entry.tag(vpnLen - 1, sectortlbwidth)
-    val wb_vpn = Mux(s2xlate === onlyStage2, s2vpn, s1vpn) 
+    val wb_vpn = Mux(s2xlate === onlyStage2, s2vpn, s1vpn)
     val vpn = Cat(wb_vpn, 0.U(sectortlbwidth.W))
     val asid_hit = if (ignoreAsid) true.B else (this.asid === asid)
     val vpn_hit = Wire(Bool())
@@ -120,15 +122,8 @@ def wbhit(data: PtwRespS2, asid: UInt, nSets: Int = 1, ignoreAsid: Boolean = fal
     val s2xlate_hit = s2xlate === this.s2xlate
     // NOTE: for timing, dont care low set index bits at hit check
     //       do not need store the low bits actually
-    if (!pageSuper) {
-      vpn_hit := asid_hit && drop_set_equal(vpn(vpn.getWidth - 1, sectortlbwidth), tag, nSets)
-    }
-    else if (!pageNormal) {
-      val tag_match_hi = tag(vpnnLen * 2 - 1, vpnnLen - sectortlbwidth) === vpn(vpnnLen * 3 - 1, vpnnLen * 2)
-      val tag_match_mi = tag(vpnnLen - 1, 0) === vpn(vpnnLen * 2 - 1, vpnnLen)
-      val tag_match = tag_match_hi && (level.get.asBool || tag_match_mi)
-      vpn_hit := asid_hit && tag_match
-    }
+    if (!pageSuper) { ... }
+    else if (!pageNormal) { ... }
     else {
       val tmp_level = level.get
       val tag_match_hi = tag(vpnnLen * 3 - sectortlbwidth - 1, vpnnLen * 2 - sectortlbwidth) === vpn(vpnnLen * 3 - 1, vpnnLen * 2)
@@ -153,9 +148,11 @@ def wbhit(data: PtwRespS2, asid: UInt, nSets: Int = 1, ignoreAsid: Boolean = fal
 ```
 
 ## TlbStorageWrapper
-- 相比TlbStorage，只改动端口的`w`和`access`的部分
-- Storage的access是`Vec(ports,.._)`，表示每个读端口的命中路
-  - 一旦唯一的写端口`valid`则所有access均为写命中路
+
+相比 TlbStorage，只改动端口的`w`和`access`的部分
+- Storage 的 access 是`Vec(ports,.._)`，表示每个读端口的命中路
+  - 一旦唯一的写端口`valid`则所有 access 均为写命中路
+
 ```scala
 class TlbStorageIO(...)(...) extends MMUIOBaseBundle {
   ...
@@ -171,9 +168,11 @@ class TlbStorageWrapperIO(...)(...) extends MMUIOBaseBundle {
   val replace = if (q.outReplace) Flipped(new TlbReplaceIO(ports, q)) else null
 }
 ```
-- Wapper的replace展开后实际使用的只有两项
-  - 传递Storage的`Output(access)`
-  - 指示refill写哪一路的`Inputs(chosen_set)`
+
+- Wapper 的 replace 展开后实际使用的只有两项
+  - 传递 Storage 的`Output(access)`
+  - 指示 refill 写哪一路的`Inputs(chosen_set)`
+
 ```scala
 class ReplaceIO(...)(...) extends TlbBundle {
   val access = Vec(Width, Flipped(new ReplaceAccessBundle(nSets, nWays)))
